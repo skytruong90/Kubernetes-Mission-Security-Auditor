@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: telemetry-api}
+spec:
+  template:
+    spec:
+      securityContext:
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+      - name: api
+        image: example.invalid/api@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+        securityContext:
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities: {drop: ["ALL"]}
+        resources:
+          requests: {cpu: "50m", memory: "64Mi"}
+          limits: {cpu: "200m", memory: "128Mi"}
+        readinessProbe: {exec: {command: ["true"]}}
+        livenessProbe: {exec: {command: ["true"]}}
